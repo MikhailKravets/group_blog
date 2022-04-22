@@ -27,9 +27,6 @@ class Author(models.Model):
 
 
 class Article(models.Model):
-    # TODO: Read One To One, One To Many, Many To Many
-    # TODO: O2O, O2M, M2M
-    # TODO: Investigate M2M relationships to Tag model
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='articles')
     title = models.CharField(max_length=255, help_text="Article's title")
     text = models.TextField(help_text="Article's content")

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Article
+{% endblock title %}
+
+{% block content %}
+    {% for v in object_list %}
+        <h1>{{ v.title }}</h1>
+        <p>{{ v.text }}</p>
+        <p>{{ v.created_at }}</p>
+        <hr />
+    {% endfor %}
+{% endblock content %}

@@ -9,6 +9,7 @@ psycopg2 = "*"
 environs = "*"
 
 [dev-packages]
+mixer = "*"
 
 [requires]
 python_version = "3.9"
