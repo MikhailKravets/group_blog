@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load doe %}
 
 {% block title %}
     Article
@@ -7,8 +8,9 @@
 {% block content %}
     {% for v in object_list %}
         <h1>{{ v.title }}</h1>
-        <p>{{ v.text }}</p>
-        <p>{{ v.created_at }}</p>
+        <p>{{ v.text|upper }}</p>
+        <p>{{ v.created_at|date:"Y.m.d" }}</p>
+        <p>{% print v.created_at v.text %}</p>
         <hr />
     {% endfor %}
-{% endblock content %}
+{% endblock %}

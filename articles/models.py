@@ -36,3 +36,6 @@ class Article(models.Model):
     class Meta:
         db_table = 'articles'
         ordering = ('-title',)
+
+
+# obj = Author.objects.annotate(articles_count=models.Count('articles'))
