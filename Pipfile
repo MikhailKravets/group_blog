@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 psycopg2 = "*"
 environs = "*"
+djangorestframework = "*"
+djangorestframework-camel-case = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 mixer = "*"
