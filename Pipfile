@@ -13,6 +13,7 @@ djangorestframework-simplejwt = "*"
 
 [dev-packages]
 mixer = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.9"
