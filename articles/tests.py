@@ -1,57 +1,29 @@
-from django.urls import reverse
+from rest_framework.reverse import reverse
 
 from mixer.backend.django import mixer
 
-from articles.models import Author, Article
-from blog.tests import BaseTest
+from articles.models import Article, Author
+from blog.tests import BaseAPITest
 
 
-class TestArticleListView(BaseTest):
+class TestArticleAPIView(BaseAPITest):
 
-    def setUp(self) -> None:
-        author = mixer.blend(Author)
-        self.article = mixer.blend(Article, author=author)
-        self.create_and_login("test@test.com", "test")
+    def setUp(self):
+        self.user = self.create_and_login()
+        self.author = mixer.blend(Author)
+        self.article = mixer.blend(Article, author=self.author)
 
     def test_list(self):
-        resp = self.client.get(reverse('articles'))
+        # API_version_namespace:app_name:name_of_url
+        resp = self.client.get(reverse('v1:articles-list'))
 
         self.assertEqual(resp.status_code, 200)
 
-        data = resp.content.decode('utf-8')
-        self.assertIn(self.article.title, data)
+        self.assertEqual(len(resp.data), Article.objects.all().count())
+        self.assertEqual(resp.data[0]["id"], self.article.id)
 
-    def test_unauthorized(self):
+    def test_non_authenticated(self):
         self.logout()
+        resp = self.client.get(reverse('v1:articles-list'))
 
-        resp = self.client.get(reverse('articles'))
-        self.assertRedirects(resp, reverse('login'))
-
-
-class TestArticleCreateView(BaseTest):
-
-    def setUp(self) -> None:
-        self.create_and_login("test@test.com", "test")
-
-        self.data = {
-            'title': 'Test title',
-            'text': 'Test text',
-            'author': mixer.blend(Author).pk
-        }
-
-    def test_create(self):
-        resp = self.client.post(reverse('articles-create'), data=self.data)
-        self.assertRedirects(resp, reverse('articles'))
-
-        article = Article.objects.get(title=self.data['title'].upper())
-        self.assertEqual(article.text, self.data['text'])
-        self.assertEqual(article.author.pk, self.data['author'])
-
-    def test_create_without_author(self):
-        self.fail("Write later")
-
-    def test_unauthorized(self):
-        self.logout()
-
-        resp = self.client.get(reverse('articles-create'))
-        self.assertRedirects(resp, reverse('login'))
+        self.assertEqual(resp.status_code, 401)
