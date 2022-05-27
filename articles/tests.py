@@ -2,7 +2,7 @@ from rest_framework.reverse import reverse
 
 from mixer.backend.django import mixer
 
-from articles.models import Article
+from articles.models import Article, Like
 from blog.tests import BaseAPITest
 
 
@@ -72,6 +72,20 @@ class TestArticleAPIView(BaseAPITest):
 
     def test_delete_other_user(self):
         self.fail("write later")
+
+    def test_toggle_like_add_like(self):
+        resp = self.client.post(reverse('v1:articles:articles-toggle-like', args=(self.article.id,)))
+
+        self.assertEqual(resp.status_code, 204)
+        self.assertTrue(Like.objects.filter(article=self.article, user=self.user).exists())
+
+    def test_toggle_like_remove_like(self):
+        Like.objects.create(article=self.article, user=self.user)
+
+        resp = self.client.post(reverse('v1:articles:articles-toggle-like', args=(self.article.id,)))
+
+        self.assertEqual(resp.status_code, 204)
+        self.assertFalse(Like.objects.filter(article=self.article, user=self.user).exists())
 
     def test_non_authenticated(self):
         self.logout()
