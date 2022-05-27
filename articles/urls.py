@@ -1,7 +1,16 @@
-from django.urls import path
+from rest_framework.routers import SimpleRouter
 
 from articles import views
 
+router = SimpleRouter(trailing_slash=True)
+router.register('art', views.ArticleViewSet, basename='articles')
+
+#   List routes      |    Detail routes
+#   <basename>-list  |    <basename>-detail
+
+# Custom @action
+# <basename>-<action name>
+
 urlpatterns = [
-    path('', views.ArticleVieSet.as_view({'get': 'list', 'post': 'create'}), name='articles-list'),
-]
+
+] + router.urls
