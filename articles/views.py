@@ -47,6 +47,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    # Default actions of ViewSet
+    # list() - list
+    # retrieve() - detailed
+    # create() - list
+    # update() - detailed
+    # partial_update() - detailed
+    # destroy() - detailed
     @action(methods=['POST'], detail=True, url_path='toggle-like', url_name='toggle-like')
     def toggle_like(self, *args, **kwargs):
         # detail=True: /v1/articles/{id}/toggle-like/
