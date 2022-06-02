@@ -6,6 +6,9 @@ class Article(models.Model):
     title = models.CharField(max_length=255, help_text="Article's title")
     text = models.TextField(help_text="Article's content")
 
+    category = models.ForeignKey('categories.Category', on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='+')
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
