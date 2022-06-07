@@ -3,18 +3,11 @@ from django.db import transaction
 from rest_framework import serializers
 
 from articles.models import Article
-from authentication.models import User
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'birth_year')
+from authentication.serializers import SignUpSerializer
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = SignUpSerializer(read_only=True)
 
     class Meta:
         model = Article
