@@ -4,17 +4,20 @@ from mixer.backend.django import mixer
 
 from articles.models import Article, Like
 from blog.tests import BaseAPITest
+from categories.models import Category
 
 
 class TestArticleAPIView(BaseAPITest):
 
     def setUp(self):
         self.user = self.create_and_login()
-        self.article = mixer.blend(Article, user=self.user)
+        self.category = mixer.blend(Category)
+        self.article = mixer.blend(Article, user=self.user, category=self.category)
 
         self.data = {
             'title': 'Test',
             'text': 'test',
+            'category_id': self.category.id
         }
 
     def test_list(self):
@@ -24,6 +27,7 @@ class TestArticleAPIView(BaseAPITest):
 
         self.assertEqual(len(resp.data), Article.objects.all().count())
         self.assertEqual(resp.data[0]["id"], self.article.id)
+        self.assertEqual(resp.data[0]['category']['id'], self.category.id)
 
     def test_retrieve(self):
         resp = self.client.get(reverse('v1:articles:articles-detail', args=(self.article.id,)))
@@ -40,6 +44,37 @@ class TestArticleAPIView(BaseAPITest):
 
         obj = Article.objects.get(title=self.data['title'], user=self.user)
         self.assertEqual(obj.text, self.data['text'])
+        self.assertEqual(obj.category, self.category)
+
+    def test_create_no_category_present(self):
+        self.article.category = None
+        self.article.save()
+
+        del self.data['category_id']
+
+        resp = self.client.post(reverse('v1:articles:articles-list'), data=self.data)
+
+        self.assertEqual(resp.status_code, 201)
+
+        obj = Article.objects.get(title=self.data['title'], user=self.user)
+        self.assertIsNone(obj.category)
+
+    def test_create_category_id_is_wrong(self):
+        self.data['category_id'] = 0
+
+        resp = self.client.post(reverse('v1:articles:articles-list'), data=self.data)
+
+        self.assertEqual(resp.status_code, 400)
+
+    def test_create_no_category_is_null(self):
+        self.data['category_id'] = None
+
+        resp = self.client.post(reverse('v1:articles:articles-list'), data=self.data)
+
+        self.assertEqual(resp.status_code, 201)
+
+        obj = Article.objects.get(title=self.data['title'], user=self.user)
+        self.assertIsNone(obj.category)
 
     def test_create_validation_error(self):
         self.data['title'] = None

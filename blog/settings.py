@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'authentication',
     'articles',
     'categories',
+    'static_content',
 ]
 
 MIDDLEWARE = [
@@ -199,3 +200,7 @@ SWAGGER_SETTINGS = {
 }
 
 DEFAULT_API_VERSION = 'v1'
+
+IMAGE_DEFAULT_EXTENSION = 'png'
+IMAGE_MAX_SIZE = 1920
+IMAGE_SIZE_LIMIT = 8 * 1024 * 1024
