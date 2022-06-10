@@ -4,6 +4,8 @@ from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from static_content.utils import upload_to
+
 
 class CustomUserManager(BaseUserManager):
     """Manager that helps you to filter or do some actions
@@ -37,6 +39,8 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name=_('email address'), max_length=255, unique=True)
+
+    avatar = models.ImageField(upload_to=upload_to, null=True, blank=True)
 
     birth_year = models.PositiveIntegerField(null=True, blank=True,
                                              validators=[

@@ -35,8 +35,7 @@ class ImageUploadView(APIView):
         with default_storage.open(file.name, 'wb') as f:
             f.write(self.preprocess_image(file))
         url = default_storage.url(file.name)
-        serializer = self.serializer_class({'name': file.name, 'url': url})
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data={'name': file.name, 'url': url}, status=status.HTTP_201_CREATED)
 
     def preprocess_image(self, file):
         """Preload image by Pillow, validate for image size limit

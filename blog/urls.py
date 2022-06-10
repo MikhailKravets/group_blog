@@ -35,6 +35,7 @@ schema_view = get_schema_view(
 api_urlpatterns_v1 = [
     path('auth/', include(('authentication.urls', 'auth'))),
     path('articles/', include(('articles.urls', 'articles'))),
+    path('categories/', include(('categories.urls', 'categories'))),
     path('profile/', include(('user_profile.urls', 'profile'))),
     path('static/', include(('static_content.urls', 'static_content'))),
     path('users/', include(('users.urls', 'users'))),

@@ -11,6 +11,7 @@ djangorestframework = "*"
 djangorestframework-camel-case = "*"
 djangorestframework-simplejwt = "*"
 drf-yasg = "*"
+pillow = "*"
 
 [dev-packages]
 mixer = "*"
